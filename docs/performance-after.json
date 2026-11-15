@@ -1,0 +1,17 @@
+{
+  "phase": "after",
+  "profile": {
+    "latency_ms": 400,
+    "download_bytes_per_sec": 50000,
+    "cache": "cold"
+  },
+  "model_requests": [],
+  "errors": [],
+  "meaningful_content_ms": 69032,
+  "models_before_click": 0,
+  "click_ms": 72110,
+  "model_loaded": false,
+  "model_observation_limit_ms": 30000,
+  "fallback_shown": true,
+  "elapsed_ms": 102533
+}

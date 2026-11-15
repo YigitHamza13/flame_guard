@@ -1,0 +1,21 @@
+{
+  "phase": "before",
+  "profile": {
+    "latency_ms": 400,
+    "download_bytes_per_sec": 50000,
+    "cache": "cold"
+  },
+  "model_requests": [
+    {
+      "url": "http://127.0.0.1:8765/app/static/models/iss.glb",
+      "at_ms": 106497
+    }
+  ],
+  "errors": [],
+  "meaningful_content_ms": 105724,
+  "models_before_click": 1,
+  "model_loaded": false,
+  "model_observation_limit_ms": 30000,
+  "fallback_shown": true,
+  "elapsed_ms": 139052
+}

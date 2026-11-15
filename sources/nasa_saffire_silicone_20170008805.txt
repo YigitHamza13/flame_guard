@@ -1,0 +1,10 @@
+Title: Saffire-II silicone samples, Results of Large-Scale Spacecraft Flammability Tests
+
+Evidence summary from NASA NTRS Document ID 20170008805: Saffire-II tested four silicone sheet samples (samples 2-1 through 2-4) at approximately 22.1% oxygen and 20 cm/s airflow. The report says none of the silicone samples burned; when the igniter was powered off, a small gas-phase flame remained briefly but did not spread and quickly extinguished. The NASA presentation describes samples 1–4 as ignited but with no flame propagation. These results describe these specific silicone samples and conditions, not all rubber materials.
+
+Material mapping note: the demo input “kauçuk” is a disclosed proxy match to the four Saffire-II silicone sheets. The result must not be generalized to other rubber types.
+
+Source: https://ntrs.nasa.gov/citations/20170008805
+PDF: https://ntrs.nasa.gov/api/citations/20170008805/downloads/20170008805.pdf?attachment=true
+Supporting NASA presentation: https://ntrs.nasa.gov/api/citations/20180004258/downloads/20180004258.pdf
+Access: NASA NTRS lists Distribution Limits: Public and Copyright: Public Use Permitted.

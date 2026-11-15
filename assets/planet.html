@@ -1,0 +1,48 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:#080d16;color:#a8b5c7;font:12px Arial,sans-serif}
+#stage{position:relative;width:100%;height:100%;background:radial-gradient(ellipse at center,#14263b 0%,#080d16 68%)}
+canvas{width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab;opacity:0;transition:opacity .5s}
+.caption{position:absolute;left:16px;top:12px;font:11px monospace;letter-spacing:.08em;pointer-events:none}
+#toggle{position:absolute;right:14px;bottom:12px;background:#151f2e;color:#a8b5c7;border:1px solid #29394c;border-radius:4px;padding:6px 10px;cursor:pointer}
+#fallback{display:none;position:absolute;inset:14% 23%;border-radius:50%;background-size:auto 100%;box-shadow:inset -45px -10px 55px #000c,0 0 25px #315b852e}
+#message{position:absolute;bottom:14px;left:16px;font-size:11px;max-width:60%}
+@media(prefers-reduced-motion:reduce){canvas{transition:none}}
+</style></head><body><div id="stage"><canvas id="planet" aria-label="Interactive rotating planet. Drag to rotate." role="img"></canvas>
+<div id="fallback" role="img"></div><div class="caption" id="label"></div><div id="message"></div><button id="toggle">Pause rotation</button></div>
+<script>
+const config=__PLANET_CONFIG__;
+const canvas=document.getElementById('planet'), fallback=document.getElementById('fallback');
+const label=document.getElementById('label'), toggle=document.getElementById('toggle'), message=document.getElementById('message');
+label.textContent=config.name.toUpperCase()+' / MISSION CONTEXT';
+fallback.style.backgroundImage='url("'+config.texture+'")';fallback.setAttribute('aria-label',config.name+' static texture preview');
+const motion=matchMedia('(prefers-reduced-motion: reduce)');let paused=motion.matches,angle=0.6,dragging=false,lastX=0,frame=0;
+function updateButton(){toggle.textContent=paused?'Resume rotation':'Pause rotation';toggle.setAttribute('aria-pressed',String(paused));}
+updateButton();
+function showFallback(){canvas.style.display='none';fallback.style.display='block';toggle.style.display='none';message.textContent='Static preview · 3D rendering unavailable';cancelAnimationFrame(frame);}
+try {
+ const gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});
+ if(!gl)throw new Error('WebGL unavailable');
+ function shader(type,source){const value=gl.createShader(type);gl.shaderSource(value,source);gl.compileShader(value);if(!gl.getShaderParameter(value,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(value));return value;}
+ const program=gl.createProgram();
+ gl.attachShader(program,shader(gl.VERTEX_SHADER,`attribute vec3 position;attribute vec2 uv;uniform float angle;uniform float aspect;varying vec2 vUv;varying vec3 normal;void main(){float c=cos(angle),s=sin(angle);vec3 p=vec3(c*position.x+s*position.z,position.y,-s*position.x+c*position.z);normal=p;vUv=uv;float scale=.79*min(1.,aspect);gl_Position=vec4(p.x*scale/aspect,p.y*scale,-p.z*.25,1.);}`));
+ gl.attachShader(program,shader(gl.FRAGMENT_SHADER,`precision mediump float;varying vec2 vUv;varying vec3 normal;uniform sampler2D textureMap;uniform float atmosphere;void main(){vec3 n=normalize(normal);float diffuse=max(dot(n,normalize(vec3(-.7,.45,1.))),0.);vec3 color=texture2D(textureMap,vUv).rgb*(.13+.97*diffuse);float rim=pow(1.-max(n.z,0.),3.);color+=vec3(.10,.36,.65)*rim*atmosphere*.45;gl_FragColor=vec4(color,1.);}`));
+ gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error('Link failure');gl.useProgram(program);
+ const vertices=[],uvs=[],indices=[],lat=48,lon=96;
+ for(let y=0;y<=lat;y++){const phi=y*Math.PI/lat;for(let x=0;x<=lon;x++){const theta=x*2*Math.PI/lon;vertices.push(Math.sin(phi)*Math.cos(theta),Math.cos(phi),Math.sin(phi)*Math.sin(theta));uvs.push(x/lon,1-y/lat);}}
+ for(let y=0;y<lat;y++){for(let x=0;x<lon;x++){const a=y*(lon+1)+x,b=a+lon+1;indices.push(a,b,a+1,b,b+1,a+1);}}
+ function buffer(name,data,size){const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,0,0);}
+ buffer('position',vertices,3);buffer('uv',uvs,2);const indexBuffer=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices),gl.STATIC_DRAW);
+ gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+ const angleLocation=gl.getUniformLocation(program,'angle'),aspectLocation=gl.getUniformLocation(program,'aspect');
+ gl.uniform1f(gl.getUniformLocation(program,'atmosphere'),config.atmosphere?1:0);
+ let ready=false,previous=0;
+ function draw(time){if(!ready)return;const delta=Math.min((time-previous)/1000,.05);previous=time;if(!paused&&!dragging)angle+=delta*.09;const width=canvas.clientWidth,height=canvas.clientHeight,dpr=Math.min(devicePixelRatio||1,1.5);if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);gl.viewport(0,0,canvas.width,canvas.height);}gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniform1f(angleLocation,angle);gl.uniform1f(aspectLocation,width/height);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_SHORT,0);if(!paused&&!document.hidden)frame=requestAnimationFrame(draw);}
+ function redraw(){cancelAnimationFrame(frame);frame=requestAnimationFrame(draw);}
+ const texture=gl.createTexture(),img=new Image();img.onload=()=>{gl.bindTexture(gl.TEXTURE_2D,texture);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);ready=true;canvas.style.opacity=1;message.textContent='Drag to explore';redraw();};img.onerror=showFallback;img.src=config.texture;
+ toggle.onclick=()=>{paused=!paused;updateButton();redraw();};motion.addEventListener('change',()=>{paused=motion.matches;updateButton();redraw();});
+ canvas.onpointerdown=e=>{dragging=true;lastX=e.clientX;canvas.setPointerCapture(e.pointerId);};canvas.onpointermove=e=>{if(dragging){angle+=(e.clientX-lastX)*.008;lastX=e.clientX;redraw();}};canvas.onpointerup=canvas.onpointercancel=()=>{dragging=false;};
+ new ResizeObserver(redraw).observe(canvas);document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(frame);if(!document.hidden)redraw();});
+ canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();showFallback();});window.addEventListener('pagehide',()=>cancelAnimationFrame(frame));
+} catch(error){showFallback();}
+</script></body></html>

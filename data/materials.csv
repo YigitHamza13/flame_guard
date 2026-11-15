@@ -1,0 +1,5 @@
+input_material,source_material,experiment_id,source_url,gravity,mapping_note
+pamuklu kumaş,SIBAL composite cotton-fiberglass fabric,20150008962,https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf,microgravity,Composite fabric; do not generalize to pure cotton.
+kablo kılıfı,0.65 mm polyethylene-insulated wire,WIF A-D,https://ntrs.nasa.gov/api/citations/19960008389/downloads/19960008389.pdf,microgravity,Specific polyethylene wire insulation; do not generalize to all cable jackets.
+kauçuk,Saffire-II silicone sheets samples 2-1 to 2-4,Saffire-II,https://ntrs.nasa.gov/api/citations/20170008805/downloads/20170008805.pdf?attachment=true,microgravity,Silicone proxy only; do not generalize to other elastomers.
+kağıt,flat cellulose sheets,FFFT,https://www.nasa.gov/wp-content/uploads/static/history/SP-4225/science/issphase1sci.pdf,microgravity,Four Mir FFFT paper samples; do not generalize to all paper products.

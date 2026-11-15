@@ -1,0 +1,9 @@
+Title: USML-1 Wire Insulation Flammability (WIF)
+
+Evidence summary from NASA NTRS Document ID 19960008389: The WIF experiment studied 0.65 mm polyethylene insulation on wire in a reduced-gravity flight experiment. Four tests were conducted (WIF A–D), in concurrent and opposed flow. The report states that ignition was achieved in all four tests; the flames were bright and produced soot. The samples were tested in approximately 21% oxygen at 1 atm. WIF-C's flame did not ultimately propagate; it initially ignited and burned weakly, then failed to propagate after airflow was started.
+
+Material mapping note: the demo input “kablo kılıfı” is matched only to these polyethylene-insulated wire specimens. It is not a claim about every cable jacket or polymer.
+
+Source: https://ntrs.nasa.gov/citations/19960008389
+PDF: https://ntrs.nasa.gov/api/citations/19960008389/downloads/19960008389.pdf
+Access: NASA NTRS lists Distribution Limits: Public and Copyright: Work of the US Gov. Public Use Permitted.

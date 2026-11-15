@@ -1,0 +1,6 @@
+Title: Forced Flow Flame-spreading Test (FFFT), NASA-Mir Phase 1 Science Report
+
+Evidence summary: NASA's Phase 1 Science Report describes the FFFT tests aboard Mir. Four flat cellulose samples of differing thickness and four polyethylene wire-insulation samples were used. It states that all samples successfully ignited and burned in very low-speed airflow. This card uses the four flat cellulose samples as the source match for the input “kağıt”; it does not generalize to all paper products.
+
+Source: https://www.nasa.gov/wp-content/uploads/static/history/SP-4225/science/issphase1sci.pdf
+Access: Public NASA report hosted by NASA.gov. No separate license statement is asserted here.

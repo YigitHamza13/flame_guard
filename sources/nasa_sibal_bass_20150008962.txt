@@ -1,0 +1,9 @@
+Title: BASS/BASS-II SIBAL composite fabric flame tests
+
+Evidence summary from the NASA NTRS record and paper (Document ID 20150008962): NASA studied a composite cotton-fiberglass fabric called SIBAL aboard the International Space Station. The report describes 27 BASS-II tests for the fabric, including 3 non-ignited tests, 6 quenching tests, and 1 blow-off test. The tests examined flame growth, spread, and extinction at different oxygen concentrations and forced-flow speeds. The source reports oxygen from 16% to 21% and flow speeds from 1 cm/s to 40 cm/s. The study does not mean that every cotton fabric behaves like this composite sample.
+
+Material mapping note: “pamuklu kumaş” in the demo is a clearly disclosed alias for the SIBAL cotton-fiberglass composite, not a claim about pure cotton.
+
+Source: https://ntrs.nasa.gov/citations/20150008962
+PDF: https://ntrs.nasa.gov/api/citations/20150008962/downloads/20150008962.pdf
+Access: NASA NTRS lists Distribution Limits: Public and Copyright: Public Use Permitted.

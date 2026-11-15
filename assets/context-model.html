@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>
+html,body{margin:0;height:100%;background:transparent;color:#bbc9db;font:14px sans-serif}*{box-sizing:border-box}#stage{display:flex;align-items:center;justify-content:center;height:calc(100% - 78px);position:relative;border:1px solid #526984;border-radius:8px;overflow:hidden}model-viewer{position:absolute;inset:0;width:100%;height:100%;touch-action:pan-y}#photo{position:absolute;inset:0;margin:auto;z-index:1;pointer-events:none}#photo{width:100%;height:100%;object-fit:contain}#photo.planet{width:240px;height:240px;max-width:85%;max-height:95%;object-fit:cover;border-radius:50%;filter:drop-shadow(12px 8px 14px #000)}footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;min-height:70px}button{min-height:44px;border:1px solid #ffb36b;border-radius:6px;background:#17283d;color:#f3f6fb;padding:10px 16px;cursor:pointer}button:focus-visible{outline:2px solid #ffb36b;outline-offset:2px}button:disabled{cursor:progress}#message{font-size:13px} [hidden]{display:none!important}
+</style></head><body><div id="stage"><img id="photo" alt=""><model-viewer id="model" hidden camera-controls touch-action="pan-y" interaction-prompt="none" loading="eager" reveal="auto" shadow-intensity="0" exposure="1" tabindex="0"></model-viewer></div><footer><span id="message" role="status" aria-live="polite"></span><button id="retry" type="button" hidden></button><button id="rotation" type="button" hidden></button></footer>
+<script>
+const config=__CONFIG__;
+const model=document.getElementById('model'),photo=document.getElementById('photo'),button=document.getElementById('rotation'),retryButton=document.getElementById('retry'),message=document.getElementById('message');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+photo.src=config.poster;photo.alt=config.name;model.alt=config.name;if(config.name!=='ISS')photo.classList.add('planet');
+retryButton.textContent=config.retryLabel;button.textContent=config.rotate;
+let libraryPromise;
+async function loadLibrary(){
+ if(customElements.get('model-viewer'))return;
+ if(!libraryPromise)libraryPromise=(async()=>{
+  // Streamlit serves unknown extensions as text/plain. Load only this bundled, same-origin module.
+  const response=await fetch(config.library);if(!response.ok)throw new Error('viewer unavailable');
+  const blob=URL.createObjectURL(new Blob([await response.text()],{type:'text/javascript'}));
+  try{await import(blob);await customElements.whenDefined('model-viewer');}finally{URL.revokeObjectURL(blob);}
+ })().catch(e=>{libraryPromise=null;throw e});
+ return libraryPromise;
+}
+let state='idle';
+function failed(){state='error';message.textContent=config.errorLabel;retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+async function start(){
+ if(state==='loading'||state==='loaded')return;
+ state='loading';retryButton.hidden=true;retryButton.disabled=true;message.textContent=config.loadingLabel;
+ try{await loadLibrary();model.hidden=false;model.src=config.model;}catch(e){failed();}
+}
+retryButton.addEventListener('click', start);
+model.addEventListener('error',failed);
+model.addEventListener('progress',event=>{if(state!=='loading')return;message.textContent=config.loadingLabel+' '+Math.round(event.detail.totalProgress*100)+'%';});
+model.addEventListener('load',()=>{if(state!=='loading')return;state='loaded';photo.hidden=true;retryButton.hidden=true;button.hidden=false;message.textContent=config.loadedLabel+' · '+config.instructions;});
+button.onclick=()=>{model.autoRotate=!model.autoRotate;button.textContent=model.autoRotate?config.pause:config.rotate;button.setAttribute('aria-pressed',String(model.autoRotate))};
+reduce.addEventListener('change',()=>{if(reduce.matches){model.autoRotate=false;button.textContent=config.rotate;button.setAttribute('aria-pressed','false')}});
+// Start immediately on page entry; no download/load button or short timeout.
+start();
+</script></body></html>
