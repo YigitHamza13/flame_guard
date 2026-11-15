@@ -69,7 +69,7 @@ def environment_strip(env):
 def apply_theme(env):
     st.markdown('<style>'+theme_css(env)+'</style>',unsafe_allow_html=True)
     st.html(theme_script(env),unsafe_allow_javascript=True)
-    st.markdown('<div class="fg-env-strip">'+html.escape(environment_strip(env))+'</div>',unsafe_allow_html=True)
+    # Environment details are available in the selector; keep the planet area uncluttered.
 
 def gravity_badge(record, env):
     known='microgravity' in str(record.get('project_type','')).lower()
