@@ -10,21 +10,43 @@ retryButton.textContent=config.retryLabel;button.textContent=config.rotate;
 let libraryPromise;
 async function loadLibrary(){
  if(customElements.get('model-viewer'))return;
- if(!libraryPromise)libraryPromise=(async()=>{
-  // Streamlit serves unknown extensions as text/plain. Load only this bundled, same-origin module.
-  const response=await fetch(config.library);if(!response.ok)throw new Error('viewer unavailable');
-  const blob=URL.createObjectURL(new Blob([await response.text()],{type:'text/javascript'}));
-  try{await import(blob);await customElements.whenDefined('model-viewer');}finally{URL.revokeObjectURL(blob);}
- })().catch(e=>{libraryPromise=null;throw e});
+ if(!libraryPromise)libraryPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.type='module';
+  script.src='https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js';
+  script.onload=()=>customElements.whenDefined('model-viewer').then(resolve,reject);
+  script.onerror=()=>reject(new Error('Google model-viewer CDN could not be reached'));
+  document.head.appendChild(script);
+ }).catch(e=>{libraryPromise=null;throw e});
  return libraryPromise;
 }
 let state='idle';
 function showFallback(){state='fallback';model.hidden=true;photo.hidden=!!config.fallbackHTML;fallback.hidden=!config.fallbackHTML;if(config.fallbackHTML)fallback.srcdoc=config.fallbackHTML;retryButton.hidden=true;button.hidden=true;message.textContent=config.fallbackLabel;model.removeAttribute('src');}
-function failed(){if(config.fallbackHTML){showFallback();return;}state='error';message.textContent=config.errorLabel;retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+function failed(error){state='error';message.textContent=(error&&error.message?error.message:config.errorLabel);retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+let modelObjectUrl=null;
 async function start(){
  if(state==='loading'||state==='loaded')return;
  state='loading';retryButton.hidden=true;retryButton.disabled=true;message.textContent=config.loadingLabel;
- try{await loadLibrary();model.hidden=false;model.src=config.model;}catch(e){failed();}
+ try{
+  await loadLibrary();
+  const urls=[config.model,config.fallbackModel].filter(Boolean);
+  let bytes=null,lastError='';
+  for(const url of [...new Set(urls)]){
+   try{
+    message.textContent=config.loadingLabel+' · '+(url===config.model?'loading app asset':'trying GitHub asset');
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok){lastError=url+' returned HTTP '+response.status;continue;}
+    const data=await response.arrayBuffer();
+    const magic=data.byteLength>=4?new TextDecoder().decode(new Uint8Array(data,0,4)):'';
+    if(magic!=='glTF'){const preview=new TextDecoder().decode(new Uint8Array(data,0,Math.min(100,data.byteLength)));lastError=url+' returned '+response.headers.get('content-type')+'; first bytes: '+preview.slice(0,70);continue;}
+    bytes=data;break;
+   }catch(error){lastError=url+': '+(error.message||String(error));}
+  }
+  if(!bytes)throw new Error('Could not retrieve a valid GLB. '+lastError);
+  if(modelObjectUrl)URL.revokeObjectURL(modelObjectUrl);
+  modelObjectUrl=URL.createObjectURL(new Blob([bytes],{type:'model/gltf-binary'}));
+  model.hidden=false;model.src=modelObjectUrl;
+ }catch(e){console.error('FLAMEGUARD 3D load failed:',e);failed(e);}
 }
 retryButton.addEventListener('click', start);
 model.addEventListener('error',failed);
