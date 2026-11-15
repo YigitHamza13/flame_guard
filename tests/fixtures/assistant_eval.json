@@ -1,0 +1,230 @@
+[
+  {
+    "question": "How does fire behave in space?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Uzayda ateş nasıl yanar?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Does a headphone cable burn in space?",
+    "lang": "EN",
+    "expected_kind": "item",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Kulaklık kablosu uzayda yanar mı?",
+    "lang": "TR",
+    "expected_kind": "item",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "What did LUCI measure for PMMA?",
+    "lang": "EN",
+    "expected_kind": "short",
+    "expected_source": "20250010653"
+  },
+  {
+    "question": "LUCI PMMA için ne ölçtü?",
+    "lang": "TR",
+    "expected_kind": "short",
+    "expected_source": "20250010653"
+  },
+  {
+    "question": "How do astronauts put out a fire?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Astronotlar yangını nasıl söndürür?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Which material is the most dangerous?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "En tehlikeli malzeme hangisi?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Where does the data come from?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Veriler nereden geliyor?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "19960008389"
+  },
+  {
+    "question": "Has anything been burned on the Moon?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "20240015307"
+  },
+  {
+    "question": "Ay üzerinde bir şey yakıldı mı?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "20240015307"
+  },
+  {
+    "question": "Does fire spread faster in space?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "Uzayda daha hızlı yayılır mı?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "Why test in space?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "Neden uzayda test yapılıyor?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "How does gravity affect flames?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "20250010653"
+  },
+  {
+    "question": "Yerçekimi alevi nasıl etkiler?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "20250010653"
+  },
+  {
+    "question": "What is ignition?",
+    "lang": "EN",
+    "expected_kind": "glossary",
+    "expected_source": null
+  },
+  {
+    "question": "Tutuşma nedir?",
+    "lang": "TR",
+    "expected_kind": "glossary",
+    "expected_source": null
+  },
+  {
+    "question": "What is extinction?",
+    "lang": "EN",
+    "expected_kind": "glossary",
+    "expected_source": null
+  },
+  {
+    "question": "Sönme nedir?",
+    "lang": "TR",
+    "expected_kind": "glossary",
+    "expected_source": null
+  },
+  {
+    "question": "What were the Saffire silicone findings?",
+    "lang": "EN",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "Saffire silikon bulguları ne?",
+    "lang": "TR",
+    "expected_kind": "topic",
+    "expected_source": "20170008805"
+  },
+  {
+    "question": "capital of France",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "fayda sağlar mı",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "telefon",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "Who won the football match?",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "Bugün hava nasıl?",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "When did the smoke alarm go off?",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "Duman alarmı ne zaman çaldı?",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "What is the tensile strength of PET?",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "Mars için ölçülmüş tutuşma sıcaklığı nedir?",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "How much does a WIF cable cost?",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "PMMA yoğunluğu kaç?",
+    "lang": "TR",
+    "expected_kind": "none",
+    "expected_source": null
+  },
+  {
+    "question": "Which material will fly in 2035?",
+    "lang": "EN",
+    "expected_kind": "none",
+    "expected_source": null
+  }
+]
