@@ -1,0 +1,12 @@
+.env
+.streamlit/secrets.toml
+__pycache__/
+*.log
+data/*.sqlite3*
+dist/
+test-results/
+.venv/
+.venv-check/
+backups/
+sources/incoming/
+*.bak
