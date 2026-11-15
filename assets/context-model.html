@@ -19,7 +19,8 @@ async function loadLibrary(){
  return libraryPromise;
 }
 let state='idle';
-function failed(){state='error';message.textContent=config.errorLabel;retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+function showFallback(){state='fallback';model.hidden=true;photo.hidden=!!config.fallbackHTML;fallback.hidden=!config.fallbackHTML;if(config.fallbackHTML)fallback.srcdoc=config.fallbackHTML;retryButton.hidden=true;button.hidden=true;message.textContent=config.fallbackLabel;model.removeAttribute('src');}
+function failed(){if(config.fallbackHTML){showFallback();return;}state='error';message.textContent=config.errorLabel;retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
 async function start(){
  if(state==='loading'||state==='loaded')return;
  state='loading';retryButton.hidden=true;retryButton.disabled=true;message.textContent=config.loadingLabel;
@@ -31,6 +32,6 @@ model.addEventListener('progress',event=>{if(state!=='loading')return;message.te
 model.addEventListener('load',()=>{if(state!=='loading')return;state='loaded';photo.hidden=true;retryButton.hidden=true;button.hidden=false;message.textContent=config.loadedLabel+' · '+config.instructions;});
 button.onclick=()=>{model.autoRotate=!model.autoRotate;button.textContent=model.autoRotate?config.pause:config.rotate;button.setAttribute('aria-pressed',String(model.autoRotate))};
 reduce.addEventListener('change',()=>{if(reduce.matches){model.autoRotate=false;button.textContent=config.rotate;button.setAttribute('aria-pressed','false')}});
-// Start immediately on page entry; no download/load button or short timeout.
-start();
+// Use local image-backed globe fallback when this environment has no bundled GLB.
+if(!config.hasModel){showFallback();}else{start();}
 </script></body></html>
