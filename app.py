@@ -21,10 +21,9 @@ st.session_state.setdefault("fg_lang", "EN")
 legacy_environment = {"Ay üssü": "Moon Base", "Mars yolculuğu": "Mars Mission"}.get(st.session_state.get("environment"), "Moon Base")
 st.session_state.setdefault("mission_environment", legacy_environment)
 # One-time migration for sessions opened before the Moon Base became the default.
-if not st.session_state.get("_fg_moon_default_v2"):
-    if st.session_state.get("mission_environment") == "ISS" and not st.session_state.get("environment"):
-        st.session_state.mission_environment = "Moon Base"
-    st.session_state["_fg_moon_default_v2"] = True
+if not st.session_state.get("_fg_moon_default_v3"):
+    st.session_state.mission_environment = "Moon Base"
+    st.session_state["_fg_moon_default_v3"] = True
 if st.session_state.mission_environment not in ENVIRONMENTS:
     st.session_state.mission_environment = "Moon Base"
 st.session_state.mission_environment = st.session_state.mission_environment
