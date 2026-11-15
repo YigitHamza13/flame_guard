@@ -29,13 +29,20 @@ async function start(){
  state='loading';retryButton.hidden=true;retryButton.disabled=true;message.textContent=config.loadingLabel;
  try{
   await loadLibrary();
-  message.textContent=config.loadingLabel+' · downloading 3D asset';
-  const response=await fetch(config.model,{cache:'force-cache'});
-  if(!response.ok)throw new Error('3D asset HTTP '+response.status);
-  const bytes=await response.arrayBuffer();
-  if(bytes.byteLength<12)throw new Error('3D asset is empty or incomplete');
-  const magic=new TextDecoder().decode(new Uint8Array(bytes,0,4));
-  if(magic!=='glTF')throw new Error('File is not a valid GLB (missing glTF header)');
+  const urls=[config.model,config.fallbackModel].filter(Boolean);
+  let bytes=null,lastError='';
+  for(const url of [...new Set(urls)]){
+   try{
+    message.textContent=config.loadingLabel+' · '+(url===config.model?'loading app asset':'trying GitHub asset');
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok){lastError=url+' returned HTTP '+response.status;continue;}
+    const data=await response.arrayBuffer();
+    const magic=data.byteLength>=4?new TextDecoder().decode(new Uint8Array(data,0,4)):'';
+    if(magic!=='glTF'){const preview=new TextDecoder().decode(new Uint8Array(data,0,Math.min(100,data.byteLength)));lastError=url+' returned '+response.headers.get('content-type')+'; first bytes: '+preview.slice(0,70);continue;}
+    bytes=data;break;
+   }catch(error){lastError=url+': '+(error.message||String(error));}
+  }
+  if(!bytes)throw new Error('Could not retrieve a valid GLB. '+lastError);
   if(modelObjectUrl)URL.revokeObjectURL(modelObjectUrl);
   modelObjectUrl=URL.createObjectURL(new Blob([bytes],{type:'model/gltf-binary'}));
   model.hidden=false;model.src=modelObjectUrl;
