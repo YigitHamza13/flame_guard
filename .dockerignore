@@ -1,0 +1,14 @@
+.git
+.env
+.streamlit/secrets.toml
+**/__pycache__
+**/*.pyc
+**/*.sqlite3*
+*.log
+app_previous.py
+app_flat_backup.py
+dist
+test-results
+.venv
+.venv-check
+backups
