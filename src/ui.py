@@ -20,7 +20,7 @@ def logo(variant="compact"):
     if variant == "full":
         st.markdown(f'<img class="logo-full" src="{asset("flameguard-transparent.png")}" alt="FLAMEGUARD logo">', unsafe_allow_html=True)
     else:
-        st.markdown('<div class="brand brand-original"><a href="/" target="_self" aria-label="Overview"><img src="/app/static/images/flameguard-icon.png" alt="FLAME GUARD"></a></div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="brand brand-original"><a href="/" target="_self" aria-label="Overview"><img src="{asset("flameguard-icon.png")}" alt="FLAME GUARD"></a></div>', unsafe_allow_html=True)
 
 
 def heading(title, description):
@@ -71,8 +71,8 @@ def context_model(env, height=360):
     fallback = ''
     if model_name != 'iss':
         fallback = (ROOT / 'assets/planet.html').read_text(encoding='utf-8').replace('__PLANET_CONFIG__', json.dumps(
-            {'name':model_name.title(), 'texture':f'/app/static/images/{model_name}.jpg', 'atmosphere':model_name == 'earth'}))
-    config = dict(name=env, model=f'/app/static/models/{model_name}.glb', poster=f'/app/static/images/{"bass-ii-msg" if model_name == "iss" else model_name}.jpg',
+            {'name':model_name.title(), 'texture':asset(f'{model_name}.jpg'), 'atmosphere':model_name == 'earth'}))
+    config = dict(name=env, model=f'/app/static/models/{model_name}.glb', poster=asset(f'{"bass-ii-msg" if model_name == "iss" else model_name}.jpg'),
                   library='/app/static/js/model-viewer.min.js',
                   retryLabel=t('Retry 3D model'),
                   loadingLabel=t('Loading 3D model…'), errorLabel=t('Model could not load. Retry when the connection is ready.'),
