@@ -72,7 +72,7 @@ def context_model(env, height=360):
     if model_name != 'iss':
         fallback = (ROOT / 'assets/planet.html').read_text(encoding='utf-8').replace('__PLANET_CONFIG__', json.dumps(
             {'name':model_name.title(), 'texture':asset(f'{model_name}.jpg'), 'atmosphere':model_name == 'earth'}))
-    config = dict(name=env, model=f'/app/static/models/{model_name}.glb', hasModel=(ROOT / 'static' / 'models' / f'{model_name}.glb').is_file(), poster=asset(f'{"bass-ii-msg" if model_name == "iss" else model_name}.jpg'),
+    config = dict(name=env, model=f'/app/static/models/{model_name}.glb', hasModel=True, poster=asset(f'{"bass-ii-msg" if model_name == "iss" else model_name}.jpg'),
                   library='/app/static/js/model-viewer.min.js',
                   retryLabel=t('Retry 3D model'),
                   loadingLabel=t('Loading 3D model…'), errorLabel=t('Model could not load. Retry when the connection is ready.'),
