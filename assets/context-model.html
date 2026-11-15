@@ -20,11 +20,24 @@ async function loadLibrary(){
 }
 let state='idle';
 function showFallback(){state='fallback';model.hidden=true;photo.hidden=!!config.fallbackHTML;fallback.hidden=!config.fallbackHTML;if(config.fallbackHTML)fallback.srcdoc=config.fallbackHTML;retryButton.hidden=true;button.hidden=true;message.textContent=config.fallbackLabel;model.removeAttribute('src');}
-function failed(){if(config.fallbackHTML){showFallback();return;}state='error';message.textContent=config.errorLabel;retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+function failed(error){state='error';message.textContent=(error&&error.message?error.message:config.errorLabel);retryButton.hidden=false;retryButton.disabled=false;model.hidden=true;photo.hidden=false;button.hidden=true;model.removeAttribute('src');}
+let modelObjectUrl=null;
 async function start(){
  if(state==='loading'||state==='loaded')return;
  state='loading';retryButton.hidden=true;retryButton.disabled=true;message.textContent=config.loadingLabel;
- try{await loadLibrary();model.hidden=false;model.src=config.model;}catch(e){failed();}
+ try{
+  await loadLibrary();
+  message.textContent=config.loadingLabel+' · downloading 3D asset';
+  const response=await fetch(config.model,{cache:'force-cache'});
+  if(!response.ok)throw new Error('3D asset HTTP '+response.status);
+  const bytes=await response.arrayBuffer();
+  if(bytes.byteLength<12)throw new Error('3D asset is empty or incomplete');
+  const magic=new TextDecoder().decode(new Uint8Array(bytes,0,4));
+  if(magic!=='glTF')throw new Error('File is not a valid GLB (missing glTF header)');
+  if(modelObjectUrl)URL.revokeObjectURL(modelObjectUrl);
+  modelObjectUrl=URL.createObjectURL(new Blob([bytes],{type:'model/gltf-binary'}));
+  model.hidden=false;model.src=modelObjectUrl;
+ }catch(e){console.error('FLAMEGUARD 3D load failed:',e);failed(e);}
 }
 retryButton.addEventListener('click', start);
 model.addEventListener('error',failed);
