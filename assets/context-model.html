@@ -11,9 +11,20 @@ let libraryPromise;
 async function loadLibrary(){
  if(customElements.get('model-viewer'))return;
  if(!libraryPromise)libraryPromise=(async()=>{
-  // Streamlit serves unknown extensions as text/plain. Load only this bundled, same-origin module.
-  const response=await fetch(config.library);if(!response.ok)throw new Error('viewer unavailable');
-  const blob=URL.createObjectURL(new Blob([await response.text()],{type:'text/javascript'}));
+  const urls=[config.library,'/app/static/js/model-viewer.min.js','/static/js/model-viewer.min.js'];
+  let source='',lastError='';
+  for(const url of [...new Set(urls)]){
+   try{
+    const response=await fetch(url,{cache:'no-store'});
+    if(!response.ok){lastError=url+' returned HTTP '+response.status;continue;}
+    const text=await response.text();
+    if(/^\s*</.test(text)){lastError=url+' returned HTML instead of JavaScript';continue;}
+    if(!text.includes('customElements.define("model-viewer"')){lastError=url+' did not return the model-viewer module';continue;}
+    source=text;break;
+   }catch(error){lastError=url+': '+(error.message||String(error));}
+  }
+  if(!source)throw new Error('3D viewer script unavailable: '+lastError);
+  const blob=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));
   try{await import(blob);await customElements.whenDefined('model-viewer');}finally{URL.revokeObjectURL(blob);}
  })().catch(e=>{libraryPromise=null;throw e});
  return libraryPromise;
