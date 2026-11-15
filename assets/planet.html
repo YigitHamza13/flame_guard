@@ -9,12 +9,12 @@ canvas{width:100%;height:100%;display:block;touch-action:pan-y;cursor:grab;opaci
 #message{position:absolute;bottom:14px;left:16px;font-size:11px;max-width:60%}
 @media(prefers-reduced-motion:reduce){canvas{transition:none}}
 </style></head><body><div id="stage"><canvas id="planet" aria-label="Interactive rotating planet. Drag to rotate." role="img"></canvas>
-<div id="fallback" role="img"></div><div class="caption" id="label"></div><div id="message"></div><button id="toggle">Pause rotation</button></div>
+<div id="fallback" role="img"></div><div id="message"></div><button id="toggle">Pause rotation</button></div>
 <script>
 const config=__PLANET_CONFIG__;
 const canvas=document.getElementById('planet'), fallback=document.getElementById('fallback');
-const label=document.getElementById('label'), toggle=document.getElementById('toggle'), message=document.getElementById('message');
-label.textContent=config.name.toUpperCase()+' / MISSION CONTEXT';
+const toggle=document.getElementById('toggle'), message=document.getElementById('message');
+
 fallback.style.backgroundImage='url("'+config.texture+'")';fallback.setAttribute('aria-label',config.name+' static texture preview');
 const motion=matchMedia('(prefers-reduced-motion: reduce)');let paused=motion.matches,angle=0.6,dragging=false,lastX=0,frame=0;
 function updateButton(){toggle.textContent=paused?'Resume rotation':'Pause rotation';toggle.setAttribute('aria-pressed',String(paused));}
